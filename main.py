@@ -11,25 +11,29 @@ import inversion_calc
 import extract
 import efficiency_calc
 import tkinter.filedialog as fd
+import numpy as np
 
+# =============================================================================
+# Eingabefelder und Einheiten festlegen festlegen
+# =============================================================================
 felder = ["pumpwavelength",
 		    "pump absorbtion cross section",
-			"pump emission cross section",
-			"laser wavelength",
-			"laser absorbtion cross section",
-			"laser emission cross section",
-			"upper state lifetime",
-			"doping concentration",
-			"pump duration",
-			"material thickness",
-			"pump density",
-			"seed fluence",
-			"number of material passes",
-			"seed duration",
-			"order of temporal Gaussian pulse shape (2n)",
-			"losses per round trip",
-			"numerical resolution"
-			]
+ 			"pump emission cross section",
+ 			"laser wavelength",
+ 			"laser absorbtion cross section",
+ 			"laser emission cross section",
+ 			"upper state lifetime",
+ 			"doping concentration",
+ 			"pump duration",
+ 			"material thickness",
+ 			"pump density",
+ 			"seed fluence",
+ 			"number of material passes",
+ 			"seed duration",
+ 			"order of temporal Gaussian pulse shape (2n)",
+ 			"losses per round trip",
+ 			"numerical resolution"
+ 			]
 
 einheiten = [("nm", 1e-9),
 			("cm^2", 1e-4),
@@ -47,19 +51,28 @@ einheiten = [("nm", 1e-9),
 			("s", 1),
 			("", 1),
 			("%", 1e-2),
-			("", 1)
-			]
+			("", 1)]
 eh = []
 for i in range(len(felder)):
 	eh.append([felder[i], einheiten[i]])
 einheiten = dict(eh)
 
-def fuellen(param, eintraege):
+
+# =============================================================================
+# Gui-Aufbau und Funktionen der Buttons
+# =============================================================================
+def eintrage_auf_param_set(param, eintraege):
 	wb = param.woerterbuch
 	for feld in felder:
-		eintraege[feld].set(wb[feld] / einheiten[feld][1])
+		v = wb[feld] / einheiten[feld][1]
+# 		p = np.floor(np.log(v) / np.log(10))
+# 		v = np.round(v * 10**(-p), 3) * 10**p
+		if v >= 1 and v < 1000:
+			eintraege[feld].set(int(np.round(v)))
+		else:
+			eintraege[feld].set(format(v, ".2e"))
 
-def eintraege_erstellen(root, felder):
+def eintraege_erstellen(root, felder, param=None):
 	eintraege = {}
 	for feld in felder:
 		reihe = tk.Frame(root)
@@ -82,17 +95,18 @@ def param_aktualisieren(eintraege):
 
 def inverion_berechnen():
 	param = param_aktualisieren(eintraege)
-	beta0 = inversion_calc.inversion(param)
-	inversion_calc.zeige_beta0(param, einheiten)
+	beta_0 = inversion_calc.inversion(param)
+	#inversion_calc.zeige_beta0(param, einheiten)
+	inversion_calc.show_all_results(param, einheiten)
 
 def effizienz_berechnen():
     param = param_aktualisieren(eintraege)
-    egal = efficiency_calc.efficency(param)
-    efficiency_calc.show_effi(param, einheiten)
+    all_effi = efficiency_calc.efficency(param)
+    efficiency_calc.show_all_results(param, einheiten)
 
 def extraction_berechnen():
 	param = param_aktualisieren(eintraege)
-	F_out, pulse__out = extract.extracted_pulse(param)
+	F_out, pulse_out = extract.extracted_pulse(param)
 	extract.zeige_ergebnisse(param, einheiten)
 
 def speichern():
@@ -104,22 +118,26 @@ def speichern():
 def laden():
 	name = fd.askopenfilename()
 	param = init_param.load_txt(name)
-	fuellen(param, eintraege)
+	eintrage_auf_param_set(param, eintraege)
 
+
+# =============================================================================
+# GUI starten
+# =============================================================================
 if __name__ == "__main__":
 	param = init_param.param_struct()
 
 	root = tk.Tk()
 	eintraege = eintraege_erstellen(root, felder)
-	fuellen(param, eintraege)
+	eintrage_auf_param_set(param, eintraege)
 	b1 = tk.Button(root, text="Inversion", command=inverion_berechnen)
 	b1.pack(side=tk.LEFT, padx=5, pady=5)
-	b2 = tk.Button(root, text="Effizienz", command=effizienz_berechnen)
+	b2 = tk.Button(root, text="Efficinecy", command=effizienz_berechnen)
 	b2.pack(side=tk.LEFT, padx=5, pady=5)
-	b3 = tk.Button(root, text="Verstärkung", command=extraction_berechnen)
+	b3 = tk.Button(root, text="Amplification", command=extraction_berechnen)
 	b3.pack(side=tk.LEFT, padx=5, pady=5)
-	b4 = tk.Button(root, text="Speichern", command=speichern)
+	b4 = tk.Button(root, text="Save", command=speichern)
 	b4.pack(side=tk.RIGHT, padx=5, pady=5)
-	b5 = tk.Button(root, text="Laden", command=laden)
+	b5 = tk.Button(root, text="Load", command=laden)
 	b5.pack(side=tk.RIGHT)
 	root.mainloop()
