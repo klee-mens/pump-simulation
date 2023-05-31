@@ -21,6 +21,9 @@ def t_integ(mat, dt):
     return (os + us) / 2 * dt
 
 def z_integ(mat, dz):
+    """
+    integriert die Matrix entlang der z Dimension, also in Richtung axis 1, blablabla
+    """
     os = np.cumsum(mat, axis=1)
     us = np.array(os)
     us[:, 1::] = os[:,0:-1]

@@ -12,6 +12,9 @@ import extract
 import efficiency_calc
 import tkinter.filedialog as fd
 import numpy as np
+fs = 12 # FontSize of everything
+ftype = "Arial" # FontType of everything
+font_tupel = (ftype, fs, "bold")
 
 # =============================================================================
 # Eingabefelder und Einheiten festlegen festlegen
@@ -77,9 +80,9 @@ def eintraege_erstellen(root, felder, param=None):
 	for feld in felder:
 		reihe = tk.Frame(root)
 		labtext = feld + " [" + einheiten[feld][0] + "]"
-		lab = tk.Label(reihe, width=40, text=labtext, anchor="w")
+		lab = tk.Label(reihe, width=40, text=labtext, font=font_tupel, anchor="w")
 		text_var = tk.StringVar()
-		ent = tk.Entry(reihe, textvariable=text_var)
+		ent = tk.Entry(reihe, textvariable=text_var, font=font_tupel)
 		reihe.pack(side=tk.TOP, padx=5, pady=5)
 		lab.pack(side=tk.LEFT)
 		ent.pack(side=tk.RIGHT)
@@ -130,14 +133,14 @@ if __name__ == "__main__":
 	root = tk.Tk()
 	eintraege = eintraege_erstellen(root, felder)
 	eintrage_auf_param_set(param, eintraege)
-	b1 = tk.Button(root, text="Inversion", command=inverion_berechnen)
+	b1 = tk.Button(root, text="Inversion", font=font_tupel, command=inverion_berechnen)
 	b1.pack(side=tk.LEFT, padx=5, pady=5)
-	b2 = tk.Button(root, text="Efficinecy", command=effizienz_berechnen)
+	b2 = tk.Button(root, text="Efficinecy", font=font_tupel, command=effizienz_berechnen)
 	b2.pack(side=tk.LEFT, padx=5, pady=5)
-	b3 = tk.Button(root, text="Amplification", command=extraction_berechnen)
+	b3 = tk.Button(root, text="Amplification", font=font_tupel, command=extraction_berechnen)
 	b3.pack(side=tk.LEFT, padx=5, pady=5)
-	b4 = tk.Button(root, text="Save", command=speichern)
+	b4 = tk.Button(root, text="Save", font=font_tupel, command=speichern)
 	b4.pack(side=tk.RIGHT, padx=5, pady=5)
-	b5 = tk.Button(root, text="Load", command=laden)
+	b5 = tk.Button(root, text="Load", font=font_tupel, command=laden)
 	b5.pack(side=tk.RIGHT)
 	root.mainloop()

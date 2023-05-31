@@ -56,6 +56,15 @@ def extracted_pulse(param):
 	param.F_out = F_out
 	param.pulse_out = pulse_out
 
+	max_fluence = np.max(F_out) 
+	pump_fluence = param.tau_p * param.I_p
+	max_gain = np.max(F_out[1::] / F_out[0:-1])
+	print()
+	print("Maximal laser fluence in J/cm^2:", max_fluence/1e4)
+	print("Total pump fluecne in J/cm^2:", pump_fluence/1e4)
+	print("Maximal gain:", max_gain)
+	print()
+	
 	return F_out, pulse_out
 
 
@@ -73,7 +82,7 @@ def zeige_pulsform(param):
 	for zeile in param.pulse_out:
 		counter += 1
 		m = np.max(zeile)
-		plt.plot(t, zeile/m, label="Pass Nr " +str(counter))
+		plt.plot(t*1e9, zeile/m, label="Pass Nr " +str(counter))
 	plt.xlabel("Zeit in ns")
 	plt.ylabel("Signal in a.u.")
 	plt.grid()

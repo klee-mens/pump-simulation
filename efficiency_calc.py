@@ -57,7 +57,7 @@ def show_all_results(param, einheiten=None):
 	all_effi = np.array(param.effi_array)
 # 	effi_img = np.flipud(np.transpose(all_effi))
 	effi_img = np.transpose(all_effi)
-
+	
 	if einheiten == None:
 		plt.figure()
 		ext = [0, param.I_p, param.tau_p, 0]
@@ -67,7 +67,7 @@ def show_all_results(param, einheiten=None):
 		plt.ylabel("Pumpduration in s")
 		plt.xlabel("Pumpintensity in W/m^2")
 		plt.title(r'efficiency vs. pump duration and $I_p$')
-
+		
 		plt.figure()
 		s = all_effi.shape
 		ip = np.linspace(0, param.I_p, s[0])
@@ -78,7 +78,7 @@ def show_all_results(param, einheiten=None):
 		plt.xlabel("Pumpintensity in W/m^2")
 		plt.grid()
 		plt.title(r'efficiency vs. pump intensity at $\tau_p$ =' + str(param.tau_p*1000) + 'ms')
-
+		
 		plt.figure()
 		s = all_effi.shape
 		t = np.linspace(0, param.I_p, s[1])
@@ -101,7 +101,7 @@ def show_all_results(param, einheiten=None):
 		plt.xlabel("Pumpintensity in " + einheiten[xkey][0])
 		plt.ylabel("Pumpduration in " + einheiten[ykey][0])
 		plt.title(r'efficiency vs. pump duration and $I_p$')
-
+		
 		plt.figure()
 		s = all_effi.shape
 		ip = np.linspace(0, param.woerterbuch[xkey] / einheiten[xkey][1], s[0])
@@ -111,9 +111,9 @@ def show_all_results(param, einheiten=None):
 		plt.ylabel("storage efficiency in %")
 		plt.xlabel("Pumpintensity in " + einheiten[xkey][0])
 		plt.grid()
-		plt.title(r'efficiency vs. pump intensity at $\tau_p$ =' +
+		plt.title(r'efficiency vs. pump intensity at $\tau_p$ =' + 
 			str(param.tau_p / einheiten[ykey][1]) + einheiten[ykey][0])
-
+		
 		plt.figure()
 		s = all_effi.shape
 		ip = np.linspace(0, param.woerterbuch[ykey] / einheiten[ykey][1], s[1])
@@ -121,13 +121,13 @@ def show_all_results(param, einheiten=None):
 		plt.plot(ip, eot*100)
 		plt.ylim((0, np.max(eot)*105))
 		plt.ylabel("storage efficiency in %")
-		plt.xlabel("Pumpduration in " + einheiten[ykey][0])
+		plt.xlabel("Pumpduration in " + einheiten[ykey][0])		
 		plt.grid()
-		plt.title(r'efficiency vs. pump duration at $I_p$ =' +
+		plt.title(r'efficiency vs. pump duration at $I_p$ =' + 
 			str(param.I_p/einheiten[xkey][1]) + einheiten[xkey][0])
-
+		
 	plt.show()
-
+		
 # =============================================================================
 # Tests
 # =============================================================================

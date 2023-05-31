@@ -93,22 +93,23 @@ class param_struct:
 	# function generates a temporal pulse array
 		c = 3E8 # [m/s]
 		h = 6.626E-34 # [Js]
-
+		
+		if len(self.seedtype) > 5 and self.seedtype[0:5] == 'gauss':
+			n = int(float(self.seedtype[5::]))
+		else:
+			n = 1
+	
 		pulse = np.zeros(self.seedres)
 
 		stepsize = self.seed_sample_length / self.seedres
+		t = np.linspace( -(self.seedres-1)/2, (self.seedres-1)/2, self.seedres)*stepsize
 
-		if self.seedtype == 'rect':
+		if self.seedtype == 'rect' or n==0:
 			k1 = int((self.seed_sample_length - self.tau_seed) / (2 * stepsize))
 			k2 = int((self.seed_sample_length + self.tau_seed) / (2 * stepsize))
 			pulse[k1:k2] = self.F_in / h / self.nu_l / c / self.tau_seed
 
 		elif self.seedtype[0:5] == 'gauss':
-			if len(self.seedtype) > 5:
-				n = int(float(self.seedtype[5::]))
-			else:
-				n = 1
-			t = np.linspace( -(self.seedres-1)/2, (self.seedres-1)/2, self.seedres)*stepsize
 			pulse = np.exp( -(t / self.tau_seed * 2) ** (2*n))
 			pulse = self.F_in / h / c * self.lambda_l / c / np.sum(pulse) / stepsize * pulse
 
